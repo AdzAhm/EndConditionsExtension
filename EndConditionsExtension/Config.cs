@@ -1,24 +1,33 @@
-﻿using EndConditionsExtension.Elements;
-using Exiled.API.Interfaces;
-using System;
+using EndConditionsExtension.Elements;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EndConditionsExtension
 {
-    internal class Config : IConfig
+    public class Config
     {
         [Description("Is the plugin enabled?")]
-        public bool IsEnabled { get; set; }
-        [Description("Do enable the debug (developer) mode?")]
-        public bool Debug { get; set; }
-        [Description("A list of conditions for each CustomRole")]
+        public bool IsEnabled { get; set; } = true;
+
+        [Description("Enable debug (developer) mode?")]
+        public bool Debug { get; set; } = false;
+
+        [Description("Traditional per-role-ID end conditions (Key = Role ID)")]
         public Dictionary<int, EndCondition> EndConditions { get; set; } = new()
         {
-            { 1, new() }
+            { 1, new EndCondition() }
+        };
+
+        [Description("Custom-team based end conditions (Key = CustomTeamId name)")]
+        public Dictionary<string, CustomTeamEndCondition> CustomTeamEndConditions { get; set; } = new()
+        {
+            { "SerpentHand", new CustomTeamEndCondition() }
+        };
+
+        [Description("Escape-based win conditions (Key = Identifier)")]
+        public Dictionary<string, EscapeWinCondition> EscapeWinConditions { get; set; } = new()
+        {
+            { "SerpentHandEscape", new EscapeWinCondition() }
         };
     }
 }

@@ -1,14 +1,14 @@
-﻿using Exiled.API.Enums;
 using PlayerRoles;
+using PlayerRoles.RoleAssign;
 using System.Collections.Generic;
 
 namespace EndConditionsExtension.Structures
 {
-    internal interface IEndCondition
+    public interface IEndCondition
     {
-        public abstract bool MustRemainOnlyOneTeam { get; set; }
-        public abstract Dictionary<Team, int> RemainingTeams { get; set; }
-        public abstract int MaxPlayersToEnd { get; set; }
-        public abstract LeadingTeam WinningTeam { get; set; }
+        bool MustRemainOnlyOneTeam { get; set; }
+        Dictionary<Team, int> RemainingTeams { get; set; }
+        int MaxPlayersToEnd { get; set; }
+        LeadingTeam WinningTeam { get; set; }
     }
 }

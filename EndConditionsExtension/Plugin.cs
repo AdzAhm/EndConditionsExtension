@@ -1,35 +1,48 @@
-﻿using Exiled.API.Features;
+using LabApi.Loader.Features.Plugins;
+using LabApi.Loader.Features.Plugins.Enums;
 using System;
-using ServerHandler = Exiled.Events.Handlers.Server;
+using UncomplicatedCustomRoles.API.Features;
+using ServerEvents = LabApi.Events.Handlers.ServerEvents;
+using PlayerEvents = LabApi.Events.Handlers.PlayerEvents;
 
 namespace EndConditionsExtension
 {
-    internal class Plugin : Plugin<Config>
+    public class Plugin : Plugin<Config>
     {
         public override string Name => "EndConditionsExtension";
-        public override string Author => "FoxWorn3365";
-        public override string Prefix => "EndConditionsExtension";
-        public override Version Version => new(0, 9, 0);
-        public override Version RequiredExiledVersion => new(8, 8, 0);
-        public static Plugin Istance;
+        public override string Author => "FoxWorn3365, Refactored";
+        public override string Description => "Extension for UncomplicatedCustomRoles to add custom end conditions.";
+        public override Version Version => new(1, 0, 0);
+        public override Version RequiredApiVersion => new(1, 1, 7);
+        public override LoadPriority Priority => LoadPriority.Medium;
+
+        public static Plugin Instance;
         internal Handler Handler;
-        public override void OnEnabled()
+
+        public override void Enable()
         {
-            Istance = this;
+            Instance = this;
             Handler = new();
 
-            ServerHandler.EndingRound += Handler.OnEnding;
+            // UCR Event Registration
+            UcrEvents.CustomRoleEscaped += Handler.OnCustomRoleEscaped;
 
-            base.OnEnabled();
+            // LabAPI Event Registration
+            ServerEvents.RoundEnding += Handler.OnRoundEnding;
+            ServerEvents.WaitingForPlayers += Handler.OnWaitingForPlayers;
         }
-        public override void OnDisabled()
+
+        public override void Disable()
         {
-            ServerHandler.EndingRound -= Handler.OnEnding;
+            // LabAPI Event Unregistration
+            ServerEvents.RoundEnding -= Handler.OnRoundEnding;
+            ServerEvents.WaitingForPlayers -= Handler.OnWaitingForPlayers;
 
-            Istance = null;
+            // UCR Event Unregistration
+            UcrEvents.CustomRoleEscaped -= Handler.OnCustomRoleEscaped;
+
+            Instance = null;
             Handler = null;
-
-            base.OnDisabled();
         }
     }
 }
